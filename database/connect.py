@@ -16,7 +16,7 @@ def get_connect():
 def create_table():
     sql = """
     CREATE TABLE IF NOT EXISTS users (
-        id BIGINT PRIMARY KEY NOT NULL,
+        id SERIAL PRIMARY KEY,
         fullname VARCHAR(200) NOT NULL,
         phone VARCHAR(50) UNIQUE NOT NULL,
         address TEXT,
@@ -27,13 +27,13 @@ def create_table():
     );
 
     CREATE TABLE IF NOT EXISTS category (
-        id BIGINT PRIMARY KEY NOT NULL,
+        id SERIAL PRIMARY KEY,
         name VARCHAR(50) NOT NULL,
         is_active BOOLEAN DEFAULT TRUE
     );
 
     CREATE TABLE IF NOT EXISTS product (
-        id BIGINT PRIMARY KEY NOT NULL,
+        id SERIAL PRIMARY KEY ,
         name VARCHAR(200) NOT NULL,
         image TEXT,
         price BIGINT NOT NULL,
@@ -46,7 +46,7 @@ def create_table():
     );
 
     CREATE TABLE IF NOT EXISTS orders (
-        id BIGINT PRIMARY KEY NOT NULL,
+        id SERIAL PRIMARY KEY,
         chat_id BIGINT REFERENCES users(chat_id) NOT NULL,
         product_id BIGINT REFERENCES product(id) NOT NULL,
         price BIGINT NOT NULL,

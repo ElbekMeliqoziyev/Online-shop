@@ -20,8 +20,10 @@ start_router = Router()
 async def start_handler(message:Message):
     if register_by_id(message.from_user.id):
         await message.answer(START_TEXT, reply_markup= REGISTER_END_KEYBOARD)
+    
     else:
         await message.answer(START_TEXT, reply_markup = START_KEYBOARD)
+    
 
 @start_router.message(F.text == "Register")
 async def register_handler(message:Message, state:FSMContext):
