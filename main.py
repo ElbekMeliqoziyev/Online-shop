@@ -1,18 +1,16 @@
 from aiogram import Bot, Dispatcher, F
-from environs import Env
-import logging, asyncio
+import logging, asyncio, os
+
 
 from handlers import start_router, user_router
 
 
-env = Env()
-env.read_env() 
 
 dp = Dispatcher()
 
 
 async def main():
-    bot = Bot(env.str("TOKEN"))
+    bot = Bot(os.getenv("TOKEN"))
     dp.include_router(start_router)
     dp.include_router(user_router)
     await dp.start_polling(bot)
