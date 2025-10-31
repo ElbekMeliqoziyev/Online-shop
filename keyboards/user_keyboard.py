@@ -24,6 +24,10 @@ def category_button():
         if i%2 == 0:
             inline_keyboard.append(button)
             button = []
+
+        if button:
+            inline_keyboard.append(button)
+
     inline_keyboard.append([InlineKeyboardButton(text="🔙 Back", callback_data="category_back")])  
 
     return InlineKeyboardMarkup(

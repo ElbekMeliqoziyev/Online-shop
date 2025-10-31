@@ -1,13 +1,13 @@
 from aiogram import Bot, Dispatcher, F
 import logging, asyncio, os
 
-
+from dotenv import load_dotenv
 from handlers import start_router, user_router
 
 
 
 dp = Dispatcher()
-
+load_dotenv()
 
 async def main():
     bot = Bot(os.getenv("TOKEN"))
