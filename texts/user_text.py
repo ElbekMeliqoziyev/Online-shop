@@ -1,3 +1,5 @@
+from deep_translator import GoogleTranslator
+
 GENDER_TEXT = """
 🛍️ Kim uchun kiyim xarid qilmoqchisiz?
 
@@ -19,3 +21,15 @@ SEASON_TEXT = """🌤️ Endi mavsumni tanlang
 
 Qaysi fasl uchun kiyim izlayapsiz?
 👇 Quyidagi variantlardan birini tanlang:"""
+
+
+def menu_oxiri(gender,category,season):
+    jins = GoogleTranslator(source= "auto", target="uz").translate(gender)
+    turi = GoogleTranslator(source= "auto", target="uz").translate(category)
+    fasl = GoogleTranslator(source= "auto", target="uz").translate(season)
+    return f"""🛍️ Sizning tanlovingiz:
+👤 Jins: {jins.title()}
+👕 Kategoriya: {turi.title()}
+🌦️ Mavsum: {fasl.title()}
+
+Endi siz uchun mos kiyimlarni ko‘rsatamiz 👇"""

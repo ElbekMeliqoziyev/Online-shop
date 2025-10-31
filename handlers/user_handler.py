@@ -4,10 +4,14 @@ from aiogram.fsm.context import FSMContext
 
 from states import MenuOption
 
-from texts import GENDER_TEXT, START_TEXT, CATEGORY_TEXT, SEASON_TEXT
+from database import get_filter_products, get_category_by_name
+
+from texts import (
+    GENDER_TEXT, START_TEXT, CATEGORY_TEXT, 
+    SEASON_TEXT, menu_oxiri)
 from keyboards import (
     GENDER_KEYBOARD_MENU, REGISTER_END_KEYBOARD, 
-    CATEGORY_KEYBOARD, SEASON_KEYBOARD)
+    category_button, SEASON_KEYBOARD)
 
 user_router = Router()
 
@@ -32,7 +36,7 @@ async def get_gender_menu(cal:CallbackQuery,state:FSMContext):
         await cal.message.answer(START_TEXT, reply_markup=REGISTER_END_KEYBOARD)
     else:
         await cal.message.edit_reply_markup(reply_markup=None)
-        await cal.message.edit_caption(caption=CATEGORY_TEXT, reply_markup=CATEGORY_KEYBOARD)
+        await cal.message.edit_caption(caption=CATEGORY_TEXT, reply_markup=category_button())
         await state.update_data(gender = gender)
         await state.set_state(MenuOption.category)
 
@@ -59,9 +63,17 @@ async def get_season(cal:CallbackQuery, state:FSMContext):
 
     if season == "back":
         await cal.message.edit_caption(caption=CATEGORY_TEXT)
-        await cal.message.edit_reply_markup(reply_markup=CATEGORY_KEYBOARD)
+        await cal.message.edit_reply_markup(reply_markup=category_button())
     else:
-        await cal.message.answer(f"Siz {season} tanladingiz")
+        data = await state.get_data()
+        gender = data["gender"]
+        category = data["category"]
 
+        await state.clear()
+        await cal.message.edit_reply_markup(reply_markup=None)
+        await cal.message.edit_caption(caption=None)
+        await cal.message.answer(menu_oxiri(gender,category,season))
 
+        category_id = get_category_by_name(category)[0]
+        baza = get_filter_products(category_id, season,gender)
         
