@@ -23,11 +23,11 @@ def get_filter_products(category_id, season, gender):
         print(f"Product: {err}")
 
 
-def get_category_by_name(category_name):
+def get_category_by_id(category_id):
     try:
         with get_connect() as db:
             dbc = db.cursor()
-            dbc.execute("SELECT * FROM category WHERE name = ?", (category_name,))
+            dbc.execute("SELECT name FROM category WHERE id = ?", (category_id,))
             return dbc.fetchone()
     except Exception as err:
         print(f"Filter Category: {err}")

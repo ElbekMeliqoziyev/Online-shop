@@ -27,9 +27,15 @@ def menu_oxiri(gender,category,season):
     jins = GoogleTranslator(source= "auto", target="uz").translate(gender)
     turi = GoogleTranslator(source= "auto", target="uz").translate(category)
     fasl = GoogleTranslator(source= "auto", target="uz").translate(season)
+    r = ""
+    for i in range(len(turi)):
+        if i == 2:
+            r+=turi[i].upper()
+        else:
+            r+=turi[i]
     return f"""🛍️ Sizning tanlovingiz:
-👤 Jins: {jins.title()}
-👕 Kategoriya: {turi.title()}
-🌦️ Mavsum: {fasl.title()}
+👤 Jins: {jins.capitalize()}
+👕 Kategoriya: {r}
+🌦️ Mavsum: {fasl.capitalize()}
 
 Endi siz uchun mos kiyimlarni ko‘rsatamiz 👇"""

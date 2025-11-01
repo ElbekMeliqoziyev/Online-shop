@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 
 from states import MenuOption
 
-from database import get_filter_products, get_category_by_name
+from database import get_filter_products, get_category_by_id
 
 from texts import (
     GENDER_TEXT, START_TEXT, CATEGORY_TEXT, 
@@ -12,6 +12,9 @@ from texts import (
 from keyboards import (
     GENDER_KEYBOARD_MENU, REGISTER_END_KEYBOARD, 
     category_button, SEASON_KEYBOARD)
+
+from deep_translator import GoogleTranslator
+
 
 user_router = Router()
 
@@ -25,7 +28,7 @@ async def start_menu(message:Message, state:FSMContext):
 
 @user_router.callback_query(F.data.startswith("menu_gender_"))
 async def get_gender_menu(cal:CallbackQuery,state:FSMContext):
-    gender = cal.data.split("_")[-1].title()
+    gender = cal.data.split("_")[-1]
 
     await cal.answer()
 
@@ -67,13 +70,39 @@ async def get_season(cal:CallbackQuery, state:FSMContext):
     else:
         data = await state.get_data()
         gender = data["gender"]
-        category = data["category"]
+        category_id = data["category"]
 
         await state.clear()
         await cal.message.edit_reply_markup(reply_markup=None)
         await cal.message.edit_caption(caption=None)
-        await cal.message.answer(menu_oxiri(gender,category,season))
 
-        category_id = get_category_by_name(category)[0]
-        baza = get_filter_products(category_id, season,gender)
+        category_name = get_category_by_id(category_id)[0]
+
+        await cal.message.answer(menu_oxiri(gender,category_name,season))
+        data = get_filter_products(category_id, season,gender)
+
+        jins = GoogleTranslator(source= "auto", target="uz").translate(gender)
+        turi = GoogleTranslator(source= "auto", target="uz").translate(category_name)
+        fasl = GoogleTranslator(source= "auto", target="uz").translate(season)
+        r = ""
+        for i in range(len(turi)):
+            if i == 2:
+                r+=turi[i].upper()
+            else:
+                r+=turi[i]
+
+        for product in data:
+            product_text = f"""
+            {product[1]}
+            👕 Kategoriya: {r}
+            💰 Narxi: {product[3]} so‘m
+            📏 O‘lcham: {product[5]}
+            👤 Kim uchun: {jins.title()}
+            🌤 Fasl: {fasl.title()}
+            🏷 Brend: {product[8]}
+            📦 Omborda: {product[4]} dona mavjud
+            """
+            tarjima = GoogleTranslator(source="auto", target="uz").translate(product_text)
+
+            await cal.message.answer(text=tarjima)
         
